@@ -1,5 +1,5 @@
 // Honey Vivaan Premier League - Hand Cricket Game
-// Complete vanilla JavaScript implementation
+// Complete vanilla JavaScript implementation - Fixed
 
 // Firebase configuration
 const firebaseConfig = {
