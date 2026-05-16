@@ -26,11 +26,24 @@ let unsubscribe = null;
 // Initialize Firebase
 function initFirebase() {
   try {
-    const app = firebase.initializeApp(firebaseConfig);
+    if (!firebase) {
+      console.error('Firebase SDK not loaded');
+      return;
+    }
+    
+    let app;
+    try {
+      app = firebase.initializeApp(firebaseConfig);
+    } catch (e) {
+      // Firebase app already initialized
+      app = firebase.app();
+    }
+    
     firebaseDb = firebase.database(app);
-    console.log('Firebase initialized');
+    console.log('Firebase initialized successfully');
   } catch (error) {
     console.error('Firebase init error:', error);
+    firebaseDb = null;
   }
 }
 
