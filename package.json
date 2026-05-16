@@ -1,0 +1,22 @@
+{
+  "name": "honey-vivaan-premier-league",
+  "version": "1.0.0",
+  "description": "A simple, free, web-based hand cricket game for two players",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "hand-cricket",
+    "multiplayer",
+    "game",
+    "firebase",
+    "real-time"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "firebase": "^12.13.0"
+  }
+}
