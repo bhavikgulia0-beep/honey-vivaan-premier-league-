@@ -324,5 +324,13 @@
 
     <!-- Main App -->
     <script src="./index.js"></script>
+    
+    <!-- Ensure app starts after Firebase loads -->
+    <script>
+      if (window.firebase && window.initFirebase) {
+        window.initFirebase();
+        window.renderHome();
+      }
+    </script>
 </body>
 </html>
