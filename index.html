@@ -327,9 +327,28 @@
     
     <!-- Ensure app starts after Firebase loads -->
     <script>
-      if (window.firebase && window.initFirebase) {
-        window.initFirebase();
-        window.renderHome();
+      // Wait for Firebase to be available
+      function startApp() {
+        if (typeof firebase !== 'undefined') {
+          console.log('Firebase SDK loaded, initializing app...');
+          if (window.initFirebase) {
+            initFirebase().then(() => {
+              if (window.renderHome) {
+                renderHome();
+              }
+            });
+          }
+        } else {
+          // Retry if Firebase not loaded yet
+          setTimeout(startApp, 100);
+        }
+      }
+      
+      // Start the app
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', startApp);
+      } else {
+        startApp();
       }
     </script>
 </body>

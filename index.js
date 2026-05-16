@@ -24,25 +24,32 @@ let selectedNumber = null;
 let unsubscribe = null;
 
 // Initialize Firebase
-function initFirebase() {
+async function initFirebase() {
   try {
-    if (!firebase) {
-      console.error('Firebase SDK not loaded');
+    // Check if Firebase is loaded
+    if (typeof firebase === 'undefined') {
+      console.error('Firebase SDK is not loaded');
+      setTimeout(initFirebase, 1000); // Retry in 1 second
       return;
     }
     
-    let app;
-    try {
-      app = firebase.initializeApp(firebaseConfig);
-    } catch (e) {
-      // Firebase app already initialized
-      app = firebase.app();
+    console.log('Firebase SDK found, initializing...');
+    
+    // Check if already initialized
+    if (firebase.apps && firebase.apps.length > 0) {
+      console.log('Firebase already initialized');
+      firebaseDb = firebase.database();
+    } else {
+      console.log('Initializing Firebase with config:', firebaseConfig);
+      const app = firebase.initializeApp(firebaseConfig);
+      firebaseDb = firebase.database(app);
     }
     
-    firebaseDb = firebase.database(app);
     console.log('Firebase initialized successfully');
+    console.log('Database URL:', firebaseConfig.databaseURL);
+    
   } catch (error) {
-    console.error('Firebase init error:', error);
+    console.error('Firebase init error:', error.message);
     firebaseDb = null;
   }
 }
@@ -225,6 +232,10 @@ async function createRoom() {
   btn.textContent = '⏳ Creating...';
 
   try {
+    if (!firebaseDb) {
+      throw new Error('Firebase database not initialized. Please wait a moment and try again.');
+    }
+    
     roomCode = generateRoomCode();
     playerId = generatePlayerId();
     playerIndex = 0;
@@ -247,7 +258,7 @@ async function createRoom() {
     currentPage = 'game';
     renderGameWaiting();
   } catch (error) {
-    console.error(error);
+    console.error('Create room error:', error);
     const errorEl = document.getElementById('errorHome');
     if (errorEl) {
       errorEl.textContent = 'Failed to create room: ' + error.message;
